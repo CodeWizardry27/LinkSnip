@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkSnip — URL Shortener</title>
+    <meta name="description" content="LinkSnip is a fast, modern URL shortener with analytics, custom aliases, and link expiration.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <!-- ===== Animated Background ===== -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--1"></div>
+    <div class="bg-glow bg-glow--2"></div>
+    <div class="bg-glow bg-glow--3"></div>
+
+    <!-- ===== Header ===== -->
+    <header class="header" id="header">
+        <div class="header__logo">
+            <svg class="header__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span>LinkSnip</span>
+        </div>
+        <nav class="header__nav">
+            <a href="#shorten" class="header__link">Shorten</a>
+            <a href="#analytics" class="header__link">Analytics</a>
+        </nav>
+    </header>
+
+    <!-- ===== Hero Section ===== -->
+    <main>
+        <section class="hero" id="shorten">
+            <div class="hero__badge">⚡ Fast & Reliable URL Shortener</div>
+            <h1 class="hero__title">Shorten. Share.<br><span class="hero__gradient">Track Everything.</span></h1>
+            <p class="hero__subtitle">Transform long URLs into clean, trackable short links with Base62 encoding, custom aliases, and real-time analytics.</p>
+
+            <!-- Shorten Form -->
+            <form class="shorten-form" id="shortenForm">
+                <div class="shorten-form__main">
+                    <div class="shorten-form__input-wrapper">
+                        <svg class="shorten-form__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                        <input type="text" id="urlInput" class="shorten-form__input" placeholder="Paste your long URL here..." required>
+                    </div>
+                    <button type="submit" class="shorten-form__btn" id="shortenBtn">
+                        <span>Shorten</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="shorten-form__options">
+                    <div class="shorten-form__option">
+                        <label for="aliasInput">Custom Alias</label>
+                        <input type="text" id="aliasInput" placeholder="my-link (optional)">
+                    </div>
+                    <div class="shorten-form__option">
+                        <label for="expiryInput">Expires in (days)</label>
+                        <input type="number" id="expiryInput" placeholder="30" min="1" max="365">
+                    </div>
+                </div>
+            </form>
+
+            <!-- Result Card -->
+            <div class="result-card hidden" id="resultCard">
+                <div class="result-card__header">
+                    <div class="result-card__status">✅ Link Created</div>
+                </div>
+                <div class="result-card__body">
+                    <div class="result-card__short">
+                        <span id="shortUrlDisplay"></span>
+                        <button class="result-card__copy" id="copyBtn" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="result-card__original" id="originalUrlDisplay"></div>
+                    <div class="result-card__meta">
+                        <span id="expiryDisplay"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-msg hidden" id="errorMsg"></div>
+        </section>
+
+        <!-- ===== Stats Section ===== -->
+        <section class="stats-section" id="analytics">
+            <h2 class="section-title">Your Links</h2>
+            <p class="section-subtitle">All your shortened URLs with real-time analytics</p>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Cards injected by JS -->
+            </div>
+            <div class="stats-empty hidden" id="statsEmpty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+                <p>No links yet. Shorten your first URL above!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <p>Built with Spring Boot &amp; ❤️ by <strong>Shubham Anand</strong></p>
+    </footer>
+
+    <!-- ===== Toast ===== -->
+    <div class="toast hidden" id="toast">Copied to clipboard!</div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
