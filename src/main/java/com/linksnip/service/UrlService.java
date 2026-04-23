@@ -18,9 +18,6 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
 
-    @Value("${app.base-url}")
-    private String baseUrl;
-
     @Value("${app.default-expiry-days}")
     private int defaultExpiryDays;
 
@@ -28,7 +25,7 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-    public UrlResponse createShortUrl(UrlRequest request) {
+    public UrlResponse createShortUrl(UrlRequest request, String baseUrl) {
         String originalUrl = normalizeUrl(request.getUrl());
 
         // check if custom alias is already taken
@@ -60,7 +57,7 @@ public class UrlService {
         }
 
         url = urlRepository.save(url);
-        return toResponse(url);
+        return toResponse(url, baseUrl);
     }
 
     public String resolveAndTrack(String shortCode) {
@@ -79,16 +76,16 @@ public class UrlService {
         return url.getOriginalUrl();
     }
 
-    public UrlResponse getStats(String shortCode) {
+    public UrlResponse getStats(String shortCode, String baseUrl) {
         Url url = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new IllegalArgumentException("Short URL not found: " + shortCode));
-        return toResponse(url);
+        return toResponse(url, baseUrl);
     }
 
-    public List<UrlResponse> getAllUrls() {
+    public List<UrlResponse> getAllUrls(String baseUrl) {
         return urlRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
-                .map(this::toResponse)
+                .map(u -> toResponse(u, baseUrl))
                 .collect(Collectors.toList());
     }
 
@@ -122,7 +119,7 @@ public class UrlService {
         return url;
     }
 
-    private UrlResponse toResponse(Url url) {
+    private UrlResponse toResponse(Url url, String baseUrl) {
         UrlResponse res = new UrlResponse();
         res.setId(url.getId());
         res.setOriginalUrl(url.getOriginalUrl());
